@@ -1,9 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/register_image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/signup_photo"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="center"/>
+
+            <EditText
+                android:id="@+id/register_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/register_image"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/inputs"
+                android:padding="4dp"
+                android:drawableStart="@drawable/email"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp">
+            </EditText>
+
+            <EditText
+                android:id="@+id/register_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/register_email"
+                android:hint="Password"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/inputs"
+                android:padding="4dp"
+                android:drawableStart="@drawable/password"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp">
+            </EditText>
+
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_button"
+                android:layout_below="@+id/register_password"
+                android:padding="4dp"
+                android:text="REGISTER"
+                android:textSize="15sp"
+                android:layout_marginTop="28dp"
+                android:layout_marginLeft="19dp"
+                android:layout_marginRight="19dp"
+                android:background="@drawable/buttons"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:id="@+id/already_have_an_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/register_button"
+                android:padding="4dp"
+                android:text="Already have an Account?"
+                android:gravity="center"
+                android:textStyle="bold"
+                >
+            </TextView>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
