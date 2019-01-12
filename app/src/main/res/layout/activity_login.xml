@@ -118,11 +118,15 @@
                     android:layout_weight="25"
                     android:textStyle="bold"
                     tools:ignore="RtlCompat" />
+
                 <ImageView
+                    android:id="@+id/phone_login_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="75"
                     android:src="@drawable/phone"/>
+
+
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
