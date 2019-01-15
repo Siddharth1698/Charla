@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(sendIntent);
     }
 
+    private void sendUserToSettingsAActivity() {
+        Intent setIntent = new Intent(MainActivity.this,SettingsActivity.class);
+        startActivity(setIntent);
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.option_menu,menu);
@@ -71,10 +77,11 @@ public class MainActivity extends AppCompatActivity {
             mAuth.signOut();
             sendUserToLoginAActivity();
         }
-        if (item.getItemId() == R.id.main_logout_option){
+        if (item.getItemId() == R.id.main_settings_option){
+            sendUserToSettingsAActivity();
 
         }
-        if (item.getItemId() == R.id.main_logout_option){
+        if (item.getItemId() == R.id.main_find_friends_option){
 
         }
         return true;
