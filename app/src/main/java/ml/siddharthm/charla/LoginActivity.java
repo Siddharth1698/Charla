@@ -36,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
         InitializeFeilds();
         NeedNewAccountLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,18 +97,14 @@ public class LoginActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (currentUser != null){
-            sendUserToMainActivity();
-        }
-    }
+
 
     private void sendUserToMainActivity() {
-        Intent sendIntent = new Intent(LoginActivity.this,MainActivity.class);
-        startActivity(sendIntent);
-        }
+        Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
+    } //User cant go back to login activity once entered into main activity
 
     private void sendUserToRegisterActivity() {
         Intent regIntent = new Intent(LoginActivity.this,RegisterActivity.class);

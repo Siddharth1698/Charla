@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -25,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText UserEmail,UserPassword;
     private TextView AlreadyHaveAccount;
     private FirebaseAuth mAuth;
+    private DatabaseReference RootRef;
     private ProgressDialog loadingBar;
 
     @Override
@@ -32,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
+        RootRef = FirebaseDatabase.getInstance().getReference();
         InitializeFeilds();
         AlreadyHaveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +82,9 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        sendUserToLoginActivity();
+                        String currentUserId = mAuth.getCurrentUser().getUid();
+                        RootRef.child("Users").child(currentUserId).setValue("");
+                        sendUserToMainActivity();
                         Toast.makeText(RegisterActivity.this,"Account Created Succesfully",Toast.LENGTH_SHORT);
                         loadingBar.dismiss();
                     }else {
@@ -96,4 +101,11 @@ public class RegisterActivity extends AppCompatActivity {
         Intent regIntent = new Intent(RegisterActivity.this,LoginActivity.class);
         startActivity(regIntent);
     }
+
+    private void sendUserToMainActivity() {
+        Intent mainIntent = new Intent(RegisterActivity.this,MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
+    } //User cant go back to login activity once entered into main activity
 }
