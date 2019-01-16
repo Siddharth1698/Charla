@@ -1,15 +1,22 @@
 package ml.siddharthm.charla;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -113,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
             mAuth.signOut();
             sendUserToLoginAActivity();
         }
+        if (item.getItemId() == R.id.main_create_group_option){
+            RequestNewGroup();
+        }
         if (item.getItemId() == R.id.main_settings_option){
             sendUserToSettingsAActivity();
 
@@ -122,4 +132,49 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    private void RequestNewGroup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog);
+        builder.setTitle("Enter Group Name");
+        final EditText groupNameFeild = new EditText(MainActivity.this);
+        groupNameFeild.setHint("Gaming Zone");
+        builder.setView(groupNameFeild);
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String groupName = groupNameFeild.getText().toString();
+                if (TextUtils.isEmpty(groupName)){
+                    Toast.makeText(MainActivity.this,"Empty Feild",Toast.LENGTH_SHORT);
+
+                }else {
+                    createNewGroup(groupName);
+
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+               dialogInterface.cancel();
+
+            }
+        });
+        builder.show();
+
+
+    }
+
+    private void createNewGroup(final String groupName) {
+        RootRef.child("Groups").child("groupName").setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+             if (task.isSuccessful()){
+                 Toast.makeText(MainActivity.this,groupName + " is created succesfully",Toast.LENGTH_SHORT);
+             }
+            }
+        });
+    }
+
+
 }
