@@ -8,7 +8,7 @@
 
         <include
             android:id="@+id/group_chat_bat_layout"
-            android:layout="@layout/app_bar_layout"></include>
+            layout="@layout/app_bar_layout"></include>
 
     <ScrollView
         android:id="@+id/my_Scroll_view"
