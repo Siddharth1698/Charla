@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -130,16 +131,17 @@ public class SettingsActivity extends AppCompatActivity {
                 if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name")) && (dataSnapshot.hasChild("image"))){
                     String retriveUserName = dataSnapshot.child("name").getValue().toString();
                     String retriveStatus = dataSnapshot.child("status").getValue().toString();
-                  //  String retriveProfileImage = dataSnapshot.child("image").getValue().toString();
+                    String retriveProfileImage = dataSnapshot.child("image").getValue().toString();
 
                     userName.setText(retriveUserName);
                     userStatus.setText(retriveStatus);
+                    Picasso.get().load(retriveProfileImage).into(userProfileImage);
+
 
                 }else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))){
 
                     String retriveUserName = dataSnapshot.child("name").getValue().toString();
                     String retriveStatus = dataSnapshot.child("status").getValue().toString();
-                   // String retriveProfileImage = dataSnapshot.child("image").getValue().toString();
 
                     userName.setText(retriveUserName);
                     userStatus.setText(retriveStatus);
