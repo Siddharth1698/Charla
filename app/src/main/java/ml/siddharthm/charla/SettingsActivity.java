@@ -20,6 +20,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -36,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private static int galleryPic = 1;
+    private StorageReference UserProfileImageRef;
 
 
     @Override
@@ -45,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
         InitializeFeilds();
         updateAccountSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +83,22 @@ public class SettingsActivity extends AppCompatActivity {
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if(resultCode == RESULT_OK){
+
+                Uri resultUri = result.getUri();
+                StorageReference filepath = UserProfileImageRef.child(currentUserId + ".jpg");
+                filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(SettingsActivity.this,"Image uploaded succesfully...",Toast.LENGTH_SHORT);
+                        }else {
+                            Toast.makeText(SettingsActivity.this,task.getException().toString(),Toast.LENGTH_SHORT);
+
+                        }
+                    }
+                });
+            }
         }
 
     }
