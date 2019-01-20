@@ -1,5 +1,6 @@
 package ml.siddharthm.charla;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private static int galleryPic = 1;
+    private ProgressDialog loadingbar;
     private StorageReference UserProfileImageRef;
 
 
@@ -84,6 +86,10 @@ public class SettingsActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK){
+                loadingbar.setTitle("Set Profile Image");
+                loadingbar.setMessage("PLEASE WAIT...");
+                loadingbar.setCanceledOnTouchOutside(false);
+                loadingbar.show();
 
                 Uri resultUri = result.getUri();
                 StorageReference filepath = UserProfileImageRef.child(currentUserId + ".jpg");
@@ -92,8 +98,22 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()){
                             Toast.makeText(SettingsActivity.this,"Image uploaded succesfully...",Toast.LENGTH_SHORT);
+                            final String downloadUrl = task.getResult().getDownloadUrl().toString();
+                            RootRef.child("Users").child(currentUserId).child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(SettingsActivity.this,"Image saved in db succesfully",Toast.LENGTH_SHORT);
+                                        loadingbar.dismiss();
+                                    }else {
+                                        Toast.makeText(SettingsActivity.this,task.getException().toString(),Toast.LENGTH_SHORT);
+                                        loadingbar.dismiss();
+                                    }
+                                }
+                            });
                         }else {
                             Toast.makeText(SettingsActivity.this,task.getException().toString(),Toast.LENGTH_SHORT);
+                            loadingbar.dismiss();
 
                         }
                     }
@@ -174,6 +194,7 @@ public class SettingsActivity extends AppCompatActivity {
         userName = (EditText)findViewById(R.id.set_user_name);
         userStatus = (EditText)findViewById(R.id.set_profile_status);
         userProfileImage = (CircleImageView)findViewById(R.id.set_profile_image);
+        loadingbar = new ProgressDialog(this);
     }
     private void sendUserToMainActivity(){
         Intent mainIntent = new Intent(SettingsActivity.this,MainActivity.class);
