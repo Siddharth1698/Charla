@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,11 +50,21 @@ public class FindFriendsActivity extends AppCompatActivity {
         super.onStart();
         FirebaseRecyclerAdapter<Contacts,FindFriendsViewHolder> adapter = new FirebaseRecyclerAdapter<Contacts, FindFriendsViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull FindFriendsViewHolder findFriendsViewHolder, int i, @NonNull Contacts contacts) {
+            protected void onBindViewHolder(@NonNull FindFriendsViewHolder findFriendsViewHolder, final int i, @NonNull Contacts contacts) {
 
                 findFriendsViewHolder.userName.setText(contacts.getName());
                 findFriendsViewHolder.userStatus.setText(contacts.getStatus());
                 Picasso.get().load(contacts.getImage()).into(findFriendsViewHolder.profileImage);
+
+                findFriendsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String visit_user_id = getRef(i).getKey();
+                        Intent profileIntent = new Intent(FindFriendsActivity.this,ProfileActivity.class);
+                        profileIntent.putExtra("visit_user_id",visit_user_id);
+                        startActivity(profileIntent);
+                    }
+                });
 
             }
 
