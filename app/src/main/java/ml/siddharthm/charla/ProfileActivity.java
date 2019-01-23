@@ -162,12 +162,44 @@ public class ProfileActivity extends AppCompatActivity {
                     if (CurrentState.equals("request_received")){
                         AcceptChatRequest();
                     }
+                    if (CurrentState.equals("friends")){
+                        RemoveSpeceficContact();
+                    }
                 }
             });
 
         }else{
             SendMessageRequestButton.setVisibility(View.INVISIBLE);
         }
+
+    }
+
+    private void RemoveSpeceficContact() {
+
+        ContactRef.child(senderUserId).child(receiverUserId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+
+                    ContactRef.child(receiverUserId).child(senderUserId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                SendMessageRequestButton.setEnabled(true);
+                                CurrentState = "new";
+                                SendMessageRequestButton.setText("Send Message");
+                                DeclineMessageRequestButton.setVisibility(View.INVISIBLE);
+                                DeclineMessageRequestButton.setEnabled(false);
+
+                            }
+                        }
+                    });
+
+
+
+                }
+            }
+        });
 
     }
 
